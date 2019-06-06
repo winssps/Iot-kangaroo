@@ -1,6 +1,6 @@
 # my-project
 
-> A Vue.js project
+> A Vue.js IoT project
 
 ## Build Setup
 
