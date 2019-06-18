@@ -12,22 +12,22 @@
       </b-row>
       <b-row>
         <b-col>
-          <b-tabs content-class="mt-3">
-            <b-tab title="产品信息" active>
+          <b-tabs content-class="mt-3" v-model="tabIndex">
+            <b-tab title="产品信息">
               <table border="0" class="product-info-table">
                 <tr>
                   <th>产品名称</th>
-                  <td data-spm-anchor-id="5176.11485173.0.i31.7f4b59afrtSabW">测试</td>
+                  <td data-spm-anchor-id="5176.11485173.0.i31.7f4b59afrtSabW">{{product_item.product_title}}</td>
                   <th>节点类型</th>
-                  <td>设备</td>
+                  <td>{{product_item.node_type}}</td>
                   <th>创建时间</th>
-                  <td>2019/05/27 20:48:30</td>
+                  <td>{{product_item.add_time}}</td>
                 </tr>
                 <tr>
                   <th>所属分类</th>
                   <td data-spm-anchor-id="5176.11485173.0.i32.7f4b59afrtSabW">环境监测设备</td>
                   <th>数据格式</th>
-                  <td colspan="5">ICA 标准数据格式 (Alink JSON)</td>
+                  <td colspan="5">标准数据格式 (Alink JSON)</td>
                 </tr>
                 <tr>
                   <th>
@@ -52,7 +52,7 @@
                   <th>ProductSecret</th>
                   <td colspan="3">
                     <div>
-                      <span>********</span>
+                      <span>{{product_item._id}}</span>
                       <button
                         type="button"
                         class="next-btn next-btn-text next-btn-normal next-btn-medium"
@@ -81,16 +81,10 @@
               </table>
             </b-tab>
             <b-tab title="Topic类列表">
-                <b-table hover 
-                    :items="topic_items"
-                    :fields="topic_fields"
-                ></b-table>
+              <b-table hover :items="topic_items" :fields="topic_fields"></b-table>
             </b-tab>
             <b-tab title="功能定义">
-                <b-table hover 
-                    :items="function_items"
-                    :fields="function_fields"
-                ></b-table>
+              <b-table hover :items="function_items" :fields="function_fields"></b-table>
             </b-tab>
             <b-tab disabled title="日志服务"></b-tab>
             <b-tab disabled title="在线调试"></b-tab>
@@ -101,6 +95,8 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import ConfigUrl from '../config'
 export default {
   data() {
     return {
@@ -116,90 +112,111 @@ export default {
         }
       ],
       product_fields: [""],
-      product_item: [],
+      product_item: {},
       topic_fields: [
-          {
-              key: 'topic',
-              label: 'Topic类'
-          },
-          {
-              key: 'authority',
-              label: '操作权限'
-          },
-          {
-              key: 'describe',
-              label: '描述'
-          },
-          {
-              key: 'action',
-              label: '操作'
-          }],
-      topic_items: [
-        {topic: '/ssss/ssss/sss/',authority: '发布', describe: '设备属性上报'},
-        {topic: '/ssss/ssss/sss/',authority: '发布', describe: '设备属性上报'},
-        {topic: '/ssss/ssss/sss/',authority: '发布', describe: '设备属性上报'},
+        {
+          key: "topic",
+          label: "Topic类"
+        },
+        {
+          key: "permission",
+          label: "操作权限"
+        },
+        {
+          key: "describe",
+          label: "描述"
+        },
+        {
+          key: "action",
+          label: "操作"
+        }
       ],
+      topic_items: [],
       function_fields: [
         {
-					key: 'function_type',
-					label: '功能类型'
-				},
-				{
-					key: 'title',
-					label: '功能名称'
-				},
-				{
-					key: 'identifier',
-					label: '标识符'
-				},
-				{
-					key: 'data_type',
-					label: '数据类型'
-				},
-				{
-					key: 'range',
-					label: '数据范围'
-				},
-				{
-					key: 'action',
-					label: '操作'
-				},
+          key: "function_type",
+          label: "功能类型"
+        },
+        {
+          key: "title",
+          label: "功能名称"
+        },
+        {
+          key: "identifier",
+          label: "标识符"
+        },
+        {
+          key: "data_type",
+          label: "数据类型"
+        },
+        {
+          key: "range",
+          label: "数据范围"
+        },
+        {
+          key: "action",
+          label: "操作"
+        }
       ],
       function_items: [
-				{function_type: '属性', title: '温度', identifier: 'CurrentTemperature', data_type: '浮点型', range: '0~500'}
+        {
+          function_type: "属性",
+          title: "温度",
+          identifier: "CurrentTemperature",
+          data_type: "浮点型",
+          range: "0~500"
+        }
       ],
+      tabIndex: 0,
     };
+  },
+  methods: {
+    
+  },
+  watch: {
+    $route() {
+      console.log(this.$route.params)
+      this.product_item = this.$route.params;
+      if(this.product_item.productkey != undefined) {
+        axios.get(`${ConfigUrl}/topic?key=${this.product_item.productkey}`)
+        .then( res => {
+          console.log(res)
+          this.topic_items = res.data;
+        })
+      }
+      this.tabIndex = 0;
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
-    .product-info-table {
-        width: 100%;
-        border: 0;
-        border-left: 1px solid #ebecec;
-        border-top: 1px solid;
-        border-color: #ebecec;
-        margin-bottom: 18px;
-        tr {
-            height: 48px;
-            th {
-                min-width: 120px;
-                text-align: left;
-                color: #74777a;
-                font-weight: 400;
-                background: #fafafc;
-                padding: 0 12px;
-                border-right: 1px solid #ebecec;
-                border-bottom: 1px solid #ebecec;
-            }
-            td {
-                width: 22%;
-                word-break: break-all;
-                padding: 0 12px;
-                border-right: 1px solid #ebecec;
-                border-bottom: 1px solid #ebecec;
-            }
-        }
+.product-info-table {
+  width: 100%;
+  border: 0;
+  border-left: 1px solid #ebecec;
+  border-top: 1px solid;
+  border-color: #ebecec;
+  margin-bottom: 18px;
+  tr {
+    height: 48px;
+    th {
+      min-width: 120px;
+      text-align: left;
+      color: #74777a;
+      font-weight: 400;
+      background: #fafafc;
+      padding: 0 12px;
+      border-right: 1px solid #ebecec;
+      border-bottom: 1px solid #ebecec;
     }
+    td {
+      width: 22%;
+      word-break: break-all;
+      padding: 0 12px;
+      border-right: 1px solid #ebecec;
+      border-bottom: 1px solid #ebecec;
+    }
+  }
+}
 </style>    
 

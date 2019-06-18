@@ -13,7 +13,7 @@
                     <span class="index__text--2EhsV">测试</span>
                   </td>
                   <th>ProductKey</th>
-                  <td>
+                  <td colspan="3">
                     a1UwHudToBk
                     <button
                       type="button"
@@ -21,8 +21,6 @@
                       style="margin-left: 8px;"
                     >复制</button>
                   </td>
-                  <th>区域</th>
-                  <td>华东2（上海）</td>
                 </tr>
                 <tr>
                   <th>节点类型</th>

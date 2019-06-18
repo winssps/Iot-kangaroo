@@ -4,7 +4,7 @@
 			<b-row>
 				<b-col>
 					<b-form-group label="产品列表" label-cols-md="4">
-						<b-button>刷新</b-button>
+						<b-button @click="refreshHandle">刷新</b-button>
 						<b-button variant="info" v-b-modal="'new_product_modal'">添加产品</b-button>
 					</b-form-group>
 				</b-col>
@@ -12,8 +12,8 @@
 			<b-row>
 				<b-col>
 					<b-table striped hover :items="product_table_items" :fields="product_table_fields">
-						<template slot="action">
-							<b-button variant="info" to="/product/info">查看</b-button>
+						<template slot="action" slot-scope="row">
+							<b-button variant="info" @click="checkHandle(row.item, row.index, $event.target)">查看</b-button>
 							<b-button>删除</b-button>
 						</template>
 					</b-table>
@@ -96,6 +96,9 @@
   </div>
 </template>
 <script>
+import randomString from 'random-string';
+import axios from 'axios'
+import ConfigUrl from '../config'
 export default {
   data() {
     return {
@@ -145,12 +148,12 @@ export default {
         }
       ],
       product_table_items: [
-        {
-          product_title: "测试",
-          productkey: "xxxxxxxx",
-          node_type: "设备",
-          add_time: "2019/05/27 20:48:30"
-        }
+        // {
+        //   product_title: "测试",
+        //   productkey: "xxxxxxxx",
+        //   node_type: "设备",
+        //   add_time: "2019/05/27 20:48:30"
+        // }
       ]
     };
 	},
@@ -188,13 +191,28 @@ export default {
 				return
 			}
 
-			this.product_table_items.push({
+			const productkey = randomString({length: 11})
+
+			// console.log({
+			// 	product_title: this.productTitle,
+			// 	productkey: productkey,
+			// 	node_type: this.nodeType,
+			// 	add_time: this.moment(new Date()).format('llll')
+			// })
+
+			axios.post(`${ConfigUrl}/product`,{
 				product_title: this.productTitle,
-				productkey: "xxxxxxxx",
+				productkey: productkey,
 				node_type: this.nodeType,
-				add_time: this.moment(new Date()).format('llll')
+				add_time: this.moment(new Date())
 			})
-				
+			.then( res => {
+				console.log(res)
+				this.product_table_items = res.data;
+			})
+			.catch( err => {
+				console.log(err)
+			})
 
 			// Push the name to submitted names
 			// this.submittedNames.push(this.name)
@@ -203,12 +221,35 @@ export default {
 				this.$refs.new_product_modal.hide()
 			})
 		},
+		refreshHandle() {
+			axios.get(`${ConfigUrl}/product`)
+			.then( res => {
+				console.log(res)
+				this.product_table_items = res.data;
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
+		checkHandle(item, index, target) {
+			console.log(item, index, target)
+			this.$router.push({
+				name: "productInfo",
+				params: item
+			})
+		}
 	},
 	created(){
-
+		axios.get(`${ConfigUrl}/product`)
+			.then( res => {
+				console.log(res)
+				this.product_table_items = res.data;
+			})
+			.catch( err => {
+				console.log(err)
+			})
 	},
 	mounted() {
-
 	}
 };
 </script>
