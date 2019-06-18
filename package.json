@@ -1,5 +1,5 @@
 {
-  "name": "my-project",
+  "name": "IoT-giveout",
   "description": "A Vue.js project",
   "version": "1.0.0",
   "author": "winssps <365423254@qq.com>",
@@ -17,6 +17,7 @@
     "moment": "^2.24.0",
     "mqtt": "^2.18.8",
     "popper.js": "^1.12.9",
+    "random-string": "^0.2.0",
     "vue": "^2.5.3",
     "vue-router": "^3.0.6"
   },
