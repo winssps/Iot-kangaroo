@@ -83,7 +83,8 @@
               </table>
             </b-tab>
             <b-tab title="Topic类列表">
-              <b-table hover :items="topic_items" :fields="topic_fields"></b-table>
+              <b-table hover :items="topic_items" :fields="topic_fields">
+              </b-table>
             </b-tab>
             <b-tab title="功能定义">
               <b-container fluid>
@@ -94,7 +95,11 @@
                 </b-row>
                 <b-row>
                   <b-col>
-                    <b-table hover :items="function_items" :fields="function_fields"></b-table>
+                    <b-table hover :items="function_items" :fields="function_fields">
+                      <template slot="action" slot-scope="row">
+                        <b-link @click="checkHandle(row.item, row.index, $event.target)">编辑</b-link>
+                      </template>
+                    </b-table>
                   </b-col>
                 </b-row>
               </b-container>
@@ -115,6 +120,7 @@
       @show="FunctionShow"
       @ok="newFunctionHandleOk"
     >
+
       <b-container fluid>
         <b-row>
           <b-col>
@@ -152,7 +158,6 @@
                 />
               </b-form-group>
               <b-form-group
-                :state="functionDataTypeStateValidation"
                 label-for="function-data-type-select"
                 invalid-feedback="请选择数据类型"
               >
@@ -163,7 +168,6 @@
                 <b-form-select
                   id="function-data-type-select"
                   v-model="functionDataType"
-                  :state="functionDataTypeStateValidation"
                   :options="function_data_type_items"
                 ></b-form-select>
               </b-form-group>
@@ -193,7 +197,6 @@
                 </b-input-group>
               </b-form-group>
               <b-form-group
-                :state="functionDataUnitStateValidation"
                 label-for="function-data-unit-select"
                 invalid-feedback="请选择数据类型"
               >
@@ -204,7 +207,6 @@
                 <b-form-select
                   id="function-data-unit-select"
                   v-model="functionDataUnit"
-                  :state="functionDataUnitStateValidation"
                   :options="function_data_unit_items"
                 ></b-form-select>
               </b-form-group>
@@ -212,7 +214,7 @@
                 <div slot="label">描述</div>
                 <b-form-textarea
                   id="function-label-input"
-                  v-model="FunctionLabel"
+                  v-model="functionLabel"
                   placeholder="请输入描述……"
                   rows="3"
                   max-rows="6"
@@ -276,19 +278,19 @@ export default {
           label: "功能类型"
         },
         {
-          key: "title",
+          key: "function_title",
           label: "功能名称"
         },
         {
-          key: "identifier",
+          key: "function_identification",
           label: "标识符"
         },
         {
-          key: "data_type",
+          key: "function_data_type",
           label: "数据类型"
         },
         {
-          key: "range",
+          key: "function_range",
           label: "数据范围"
         },
         {
@@ -333,7 +335,7 @@ export default {
       functionStartValue: '0',
       functionEndValue: '100',
       functionDataUnit: '',
-      FunctionLabel: '',
+      functionLabel: '',
     };
   },
   computed:{
@@ -341,11 +343,10 @@ export default {
       return this.functionTitle.length >= 4 && this.functionTitle.length < 30
     },
     functionIdentificationStateValidation() {
-      console.log(/[a-zA-z0-9]$/.test(this.functionIdentification), this.functionIdentification.length >= 4, this.functionIdentification.length < 30)
       return /[a-zA-z0-9]$/.test(this.functionIdentification) && this.functionIdentification.length >= 4 && this.functionIdentification.length < 30;
     },
     functionStartValueStateValidation() {
-      return this.functionStartValue.length > 0;
+      return true;
     },
     functionEndValueStateValidation() {
       return true;
@@ -353,9 +354,46 @@ export default {
   },
   methods: {
     FunctionShow() {},
-    newFunctionHandleOk() {},
+    newFunctionHandleOk(bvModalEvt) {
+      bvModalEvt.preventDefault()
+			this.handleSubmit()
+    },
     addFunctionHandle() {},
-    handleSubmit() {}
+    handleSubmit() {
+      // Exit when the form isn't valid
+			if (!this.functionTitleStateValidation || !this.functionIdentificationStateValidation || !this.functionStartValueStateValidation) {
+				return
+      }
+
+      console.log({
+        function_type: '属性',
+				function_title: this.functionTitle,
+				function_identification: this.functionIdentification,
+        function_data_type: this.functionDataType,
+        function_range: `${this.functionStartValue} ~ ${this.functionEndValue}`,
+        function_data_unit: this.functionDataUnit,
+        function_label: this.functionLabel
+      })
+      
+      this.function_items.push({
+        function_type: '属性',
+				function_title: this.functionTitle,
+				function_identification: this.functionIdentification,
+        function_data_type: this.functionDataType,
+        function_start_value: this.functionStartValue,
+        function_end_value: this.functionEndValue,
+        function_range: `${this.functionStartValue} ~ ${this.functionEndValue}`,
+        function_data_unit: this.functionDataUnit,
+        function_label: this.functionLabel
+      });
+
+      this.$nextTick(() => {
+				this.$refs.new_function_modal.hide()
+			})
+    },
+    checkHandle(item, index, target) {
+      console.log(item, index, target)
+    }
   },
   watch: {
     $route() {
