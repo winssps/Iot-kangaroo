@@ -17,7 +17,9 @@
               <table border="0" class="product-info-table">
                 <tr>
                   <th>产品名称</th>
-                  <td data-spm-anchor-id="5176.11485173.0.i31.7f4b59afrtSabW">{{product_item.product_title}}</td>
+                  <td
+                    data-spm-anchor-id="5176.11485173.0.i31.7f4b59afrtSabW"
+                  >{{product_item.product_title}}</td>
                   <th>节点类型</th>
                   <td>{{product_item.node_type}}</td>
                   <th>创建时间</th>
@@ -84,7 +86,18 @@
               <b-table hover :items="topic_items" :fields="topic_fields"></b-table>
             </b-tab>
             <b-tab title="功能定义">
-              <b-table hover :items="function_items" :fields="function_fields"></b-table>
+              <b-container fluid>
+                <b-row>
+                  <b-col class="add_function">
+                    <b-button variant="info" v-b-modal="'new_function_modal'">添加功能</b-button>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col>
+                    <b-table hover :items="function_items" :fields="function_fields"></b-table>
+                  </b-col>
+                </b-row>
+              </b-container>
             </b-tab>
             <b-tab disabled title="日志服务"></b-tab>
             <b-tab disabled title="在线调试"></b-tab>
@@ -92,11 +105,136 @@
         </b-col>
       </b-row>
     </b-container>
+    <b-modal
+      id="new_function_modal"
+      ref="new_function_modal"
+      title="新建功能"
+      cancel-title="取消"
+      ok-title="确定"
+      ok-variant="info"
+      @show="FunctionShow"
+      @ok="newFunctionHandleOk"
+    >
+      <b-container fluid>
+        <b-row>
+          <b-col>
+            <b-form ref="function_info_form" @submit.stop.prevent="handleSubmit">
+              <b-form-group
+                :state="functionTitleStateValidation"
+                label-for="function-title-input"
+                invalid-feedback="功能名称不能为空"
+              >
+                <div slot="label">
+                  <small style="color:red;">*</small>
+                  功能名称
+                </div>
+                <b-form-input
+                  id="function-title-input"
+                  v-model="functionTitle"
+                  :state="functionTitleStateValidation"
+                  required
+                />
+              </b-form-group>
+              <b-form-group
+                :state="functionIdentificationStateValidation"
+                label-for="function-identification"
+                invalid-feedback="请输入功能标识符"
+              >
+                <div slot="label">
+                  <small style="color:red;">*</small>
+                  标识符
+                </div>
+                <b-form-input
+                  id="function-identification"
+                  v-model="functionIdentification"
+                  :state="functionIdentificationStateValidation"
+                  required
+                />
+              </b-form-group>
+              <b-form-group
+                :state="functionDataTypeStateValidation"
+                label-for="function-data-type-select"
+                invalid-feedback="请选择数据类型"
+              >
+                <div slot="label">
+                  <small style="color:red;">*</small>
+                  数据类型
+                </div>
+                <b-form-select
+                  id="function-data-type-select"
+                  v-model="functionDataType"
+                  :state="functionDataTypeStateValidation"
+                  :options="function_data_type_items"
+                ></b-form-select>
+              </b-form-group>
+              <b-form-group
+                :state="functionStartValueStateValidation && functionEndValueStateValidation"
+                label-for="function-start-value"
+                invalid-feedback="请输入数据取值范围"
+              >
+                <div slot="label">
+                  <small style="color:red;">*</small>
+                  取值范围
+                </div>
+                <b-input-group size="md">
+                  <b-form-input
+                    id="function-start-value"
+                    v-model="functionStartValue"
+                    :state="functionStartValueStateValidation"
+                    required
+                  />
+                  <span style="display:flex; align-items: center;">~</span>
+                  <b-form-input
+                    id="function-end-value"
+                    v-model="functionEndValue"
+                    :state="functionEndValueStateValidation"
+                    required
+                  />
+                </b-input-group>
+              </b-form-group>
+              <b-form-group
+                :state="functionDataUnitStateValidation"
+                label-for="function-data-unit-select"
+                invalid-feedback="请选择数据类型"
+              >
+                <div slot="label">
+                  <small style="color:red;">*</small>
+                  单位：
+                </div>
+                <b-form-select
+                  id="function-data-unit-select"
+                  v-model="functionDataUnit"
+                  :state="functionDataUnitStateValidation"
+                  :options="function_data_unit_items"
+                ></b-form-select>
+              </b-form-group>
+              <b-form-group label-for="function-label-input">
+                <div slot="label">描述</div>
+                <b-form-textarea
+                  id="function-label-input"
+                  v-model="FunctionLabel"
+                  placeholder="请输入描述……"
+                  rows="3"
+                  max-rows="6"
+                  required
+                ></b-form-textarea>
+              </b-form-group>
+            </b-form>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col></b-col>
+        </b-row>
+        <b-row>
+          <b-col></b-col>
+        </b-row>
+      </b-container>
+    </b-modal>
   </div>
 </template>
 <script>
-import axios from 'axios'
-import ConfigUrl from '../config'
+import axios from "axios";
+import ConfigUrl from "../config";
 export default {
   data() {
     return {
@@ -159,30 +297,77 @@ export default {
         }
       ],
       function_items: [
-        {
-          function_type: "属性",
-          title: "温度",
-          identifier: "CurrentTemperature",
-          data_type: "浮点型",
-          range: "0~500"
-        }
+        // {
+        //   function_type: "属性",
+        //   title: "温度",
+        //   identifier: "CurrentTemperature",
+        //   data_type: "浮点型",
+        //   range: "0~500"
+        // }
+      ],
+      function_data_type_items: [
+        { value: "int32", text: "Int32整型" },
+        { value: "float", text: "Float浮点型" },
+        { value: "text", text: "text (字符串)" },
+        { value: "enum", text: "enum (枚举型)" },
+      ],
+      function_data_unit_items: [
+        { value: '', text: '无 /'},
+        { value: 'kv', text: '千伏 / kV'},
+        { value: 'rh', text: '相对湿度 / %RH'},
+        { value: 'degree', text: '华氏度 / ℉'},
+        { value: 'c', text: '摄氏度 / °C'},
+        { value: 't', text: '吨 / t'},
+        { value: 'mg', text: '毫克 / mg'},
+        { value: 'g', text: '克 / g'},
+        { value: 'kg', text: '千克 / kg'},
+        { value: 'mm', text: '毫米 / mm'},
+        { value: 'cm', text: '厘米 / cm'}, 
+        { value: 'm', text: '米 / m'}, 
+        { value: 'km', text: '千米 / km'}, 
       ],
       tabIndex: 0,
+      functionTitle: '',
+      functionIdentification: '',
+      functionDataType: 'int32',
+      functionStartValue: '0',
+      functionEndValue: '100',
+      functionDataUnit: '',
+      FunctionLabel: '',
     };
   },
+  computed:{
+    functionTitleStateValidation() {
+      return this.functionTitle.length >= 4 && this.functionTitle.length < 30
+    },
+    functionIdentificationStateValidation() {
+      console.log(/[a-zA-z0-9]$/.test(this.functionIdentification), this.functionIdentification.length >= 4, this.functionIdentification.length < 30)
+      return /[a-zA-z0-9]$/.test(this.functionIdentification) && this.functionIdentification.length >= 4 && this.functionIdentification.length < 30;
+    },
+    functionStartValueStateValidation() {
+      return this.functionStartValue.length > 0;
+    },
+    functionEndValueStateValidation() {
+      return true;
+    }
+  },
   methods: {
-    
+    FunctionShow() {},
+    newFunctionHandleOk() {},
+    addFunctionHandle() {},
+    handleSubmit() {}
   },
   watch: {
     $route() {
-      console.log(this.$route.params)
+      console.log(this.$route.params);
       this.product_item = this.$route.params;
-      if(this.product_item.productkey != undefined) {
-        axios.get(`${ConfigUrl}/topic?key=${this.product_item.productkey}`)
-        .then( res => {
-          console.log(res)
-          this.topic_items = res.data;
-        })
+      if (this.product_item.productkey != undefined) {
+        axios
+          .get(`${ConfigUrl}/topic?key=${this.product_item.productkey}`)
+          .then(res => {
+            console.log(res);
+            this.topic_items = res.data;
+          });
       }
       this.tabIndex = 0;
     }
@@ -217,6 +402,12 @@ export default {
       border-bottom: 1px solid #ebecec;
     }
   }
+}
+
+.add_function {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
 }
 </style>    
 
