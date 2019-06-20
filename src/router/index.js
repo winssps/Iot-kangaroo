@@ -52,7 +52,7 @@ const router = new VueRouter({
                     component: DeviceList
                 },
                 {
-                    path: '/deviceDetail/:key/:name',
+                    path: 'detail/:key/:name',
                     name: 'deviceDetail',
                     component: DevicesInfo
                 },

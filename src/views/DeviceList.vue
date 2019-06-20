@@ -45,6 +45,7 @@
                 </div>
                 <b-form-select
                   id="product-select"
+                  ref="product_select"
                   v-model="product_select"
                   :state="productStateValidation"
                   :options="product_select_items"
@@ -82,6 +83,8 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import ConfigUrl from '../config'
 export default {
   data() {
     return {
@@ -92,7 +95,7 @@ export default {
           sortable: false
         },
         {
-          key: "product",
+          key: "productkey",
           label: "设备所属产品",
           sortable: false
         },
@@ -118,14 +121,14 @@ export default {
         }
       ],
       devices_items: [
-        {
-          device: 40,
-          product: "测试",
-          type: "设备",
-          status: "未激活",
-          last_time: "xxx时间",
-          action: "删除"
-        }
+        // {
+        //   device: 40,
+        //   product: "测试",
+        //   type: "设备",
+        //   status: "未激活",
+        //   last_time: "xxx时间",
+        //   action: "删除"
+        // }
       ],
       product_select_items: [{ text: "测试", value: "test" }],
       product_select: null,
@@ -172,13 +175,29 @@ export default {
         return;
       }
 
-      this.devices_items.push({
+      console.log(this.$refs.product_select)
+
+      // this.devices_items.push({
+      //   productkey: this.product_select,
+      //   device: this.DevicesTitle,
+      //   type: "设备",
+      //   status: "未激活",
+      //   last_time: this.moment(new Date()).format("llll")
+      // });
+
+      axios.post(`${ConfigUrl}/device`, {
+        productkey: this.product_select,
         device: this.DevicesTitle,
-        product: this.product_select,
         type: "设备",
         status: "未激活",
         last_time: this.moment(new Date()).format("llll")
-      });
+      })
+      .then(res => {
+        this.devices_items = res.data;
+      })
+      .catch(err => {
+        console.error(err);
+      })
 
       this.$nextTick(() => {
         this.$refs.new_product_device.hide();
@@ -188,12 +207,31 @@ export default {
     checkHandle(item, index, target) {
 			console.log(item, index, target)
 			this.$router.push({
-				path: `deviceDetail/${item.productkey}/${item.device}`,
+				path: `devices/detail/${item.productkey}/${item.device}`,
 				// name: "productDetail",
 				// params: item
 			})
 		}
   },
+  created() {
+    axios.get(`${ConfigUrl}/product`)
+			.then( res => {
+				console.log(res)
+        this.product_select_items = res.data.map(item => ({text: item.product_title, value: item.productkey}))
+			})
+			.catch( err => {
+				console.log(err)
+      })
+      
+      axios.get(`${ConfigUrl}/device`)
+			.then( res => {
+        console.log(res)
+        this.devices_items = res.data;
+			})
+			.catch( err => {
+				console.log(err)
+			})
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -10,41 +10,26 @@
                 <tr>
                   <th>产品名称</th>
                   <td data-spm-anchor-id="5176.11485173.0.i34.f58d59afNseNjd">
-                    <span class="index__text--2EhsV">测试</span>
+                    <span class="index__text--2EhsV">{{product_item.product_title}}</span>
                   </td>
                   <th>ProductKey</th>
                   <td colspan="3">
-                    a1UwHudToBk
-                    <button
-                      type="button"
-                      class="next-btn next-btn-text next-btn-normal next-btn-medium"
-                      style="margin-left: 8px;"
-                    >复制</button>
+                    {{product_item.productkey}}
                   </td>
                 </tr>
                 <tr>
                   <th>节点类型</th>
-                  <td>设备</td>
+                  <td>{{product_item.node_type}}</td>
                   <th>DeviceName</th>
                   <td>
                     <span>
-                      <span class="DeviceInfo__cell-text--1LQ4d">ssss</span>
-                      <button
-                        type="button"
-                        class="next-btn next-btn-text next-btn-normal next-btn-medium"
-                        style="margin-left: 8px;"
-                      >复制</button>
+                      <span class="DeviceInfo__cell-text--1LQ4d">{{devices_items.device}}</span>
                     </span>
                   </td>
                   <th>DeviceSecret</th>
                   <td>
                     <span>
                       ********
-                      <button
-                        type="button"
-                        class="next-btn next-btn-text next-btn-normal next-btn-medium"
-                        style="margin-left: 8px;"
-                      >显示</button>
                     </span>
                   </td>
                 </tr>
@@ -59,12 +44,7 @@
                     </span>
                   </th>
                   <td colspan="1">
-                    <span class="DeviceInfo__DeviceNickname--NvPnK">saaadsf</span>
-                    <button
-                      type="button"
-                      class="next-btn next-btn-text next-btn-normal next-btn-medium"
-                      style="margin-left: 8px;"
-                    >编辑</button>
+                    <span class="DeviceInfo__DeviceNickname--NvPnK"></span>
                   </td>
                   <th>IP地址</th>
                   <td>-</td>
@@ -75,7 +55,7 @@
                 </tr>
                 <tr>
                   <th>添加时间</th>
-                  <td>2019/06/02 16:00:12</td>
+                  <td>{{devices_items.last_time}}</td>
                   <th>激活时间</th>
                   <td></td>
                   <th>最后上线时间</th>
@@ -83,7 +63,7 @@
                 </tr>
                 <tr>
                   <th>当前状态</th>
-                  <td>未激活</td>
+                  <td>{{devices_items.status}}</td>
                   <th>
                     <span style="vertical-align: bottom;">
                       实时延迟
@@ -102,7 +82,9 @@
                 </tr>
               </table>
             </b-tab>
-            <b-tab title="Topic列表"></b-tab>
+            <b-tab title="Topic列表">
+              <b-table :items="topic_items" :fields="topic_fields"></b-table>
+            </b-tab>
             <b-tab title="运行状态"></b-tab>
             <b-tab title="事件管理" disabled></b-tab>
             <b-tab title="服务调用" disabled></b-tab>
@@ -116,6 +98,9 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import ConfigUrl from '../config'
+
 export default {
   data() {
     return {
@@ -129,8 +114,64 @@ export default {
           href: "#",
           active: true
         }
-      ]
+      ],
+      topic_fields: [
+        {
+          key: "topic",
+          label: "Topic类"
+        },
+        {
+          key: "permission",
+          label: "操作权限"
+        },
+        {
+          key: "describe",
+          label: "描述"
+        },
+        {
+          key: 'count',
+          label: "发布消息次数"
+        },
+        {
+          key: "action",
+          label: "操作"
+        }
+      ],
+      devices_items: {},
+      product_item: {},
+      function_items: [],
+      topic_items: [],
     };
+  },
+  created() {
+    var params = this.$route.params;
+    console.log(params)
+    axios.get(`${ConfigUrl}/product/${params.key}`)
+			.then( res => {
+				console.log(res)
+        this.product_item = res.data.detail[0];
+        this.function_items = res.data.functions;
+        // this.topic_items = res.data.topics;
+
+        // this.topic_items = res.data.topics.map(item => {
+        //   console.log(item.topic.replace(/\$\{deviceName\}/g, params.name));
+        //   item.topic = item.topic.replace(/\$\{deviceName\}/g, params.name);
+        //   return item;
+        // })
+        
+			})
+			.catch( err => {
+				console.log(err)
+			})
+    axios.get(`${ConfigUrl}/device/${params.name}`)
+			.then( res => {
+        console.log(res)
+        this.devices_items = res.data.detail[0];
+        this.topic_items = res.data.topic;
+			})
+			.catch( err => {
+				console.log(err)
+			})
   }
 };
 </script>
