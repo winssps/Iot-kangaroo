@@ -4,7 +4,7 @@
     <b-container fluid>
       <b-row>
         <b-col>
-          <b-form-group label="产品名称" label-cols-md="4">
+          <b-form-group :label="product_item.product_title" label-cols-md="4">
             <b-button>刷新</b-button>
             <b-button variant="info">发布</b-button>
           </b-form-group>
@@ -96,7 +96,7 @@
                   <b-col>
                     <b-table hover :items="function_items" :fields="function_fields">
                       <template slot="action" slot-scope="row">
-                        <b-link @click="checkHandle(row.item, row.index, $event.target)">编辑</b-link>
+                        <b-link @click="editHandle(row.item, row.index, $event.target)">编辑</b-link>
                       </template>
                     </b-table>
                   </b-col>
@@ -407,32 +407,46 @@ export default {
         this.$refs.new_function_modal.hide();
       });
     },
-    checkHandle(item, index, target) {
+    editHandle(item, index, target) {
       console.log(item, index, target);
     }
   },
-  watch: {
-    $route() {
-      console.log(this.$route.params);
-      this.product_item = this.$route.params;
-      if (this.product_item.productkey != undefined) {
-        axios
-          .get(`${ConfigUrl}/topic?key=${this.product_item.productkey}`)
-          .then(res => {
-            console.log(res);
-            this.topic_items = res.data;
-          });
-        axios
-          .get(`${ConfigUrl}/function?key=${this.product_item.productkey}`)
-          .then(res => {
-            this.function_items = res.data;
-          })
-          .catch(err => {
-            console.error(err);
-          });
-        this.tabIndex = 0;
-      }
+  created() {
+    console.log("created ")
+    console.log(this.$route, this.$route.params)
+
+    let productkey = this.$route.params.key;
+    if(productkey != undefined) {
+      axios.get(`${ConfigUrl}/product/${productkey}`)
+			.then( res => {
+				console.log(res)
+        this.product_item = res.data.detail[0];
+        this.function_items = res.data.functions;
+        this.topic_items = res.data.topics;
+			})
+			.catch( err => {
+				console.log(err)
+			})
     }
+
+    // this.product_item = this.$route.params;
+    // if (this.product_item.productkey != undefined) {
+    //     axios
+    //       .get(`${ConfigUrl}/topic?key=${this.product_item.productkey}`)
+    //       .then(res => {
+    //         console.log(res);
+    //         this.topic_items = res.data;
+    //       });
+    //     axios
+    //       .get(`${ConfigUrl}/function?key=${this.product_item.productkey}`)
+    //       .then(res => {
+    //         this.function_items = res.data;
+    //       })
+    //       .catch(err => {
+    //         console.error(err);
+    //       });
+    //     this.tabIndex = 0;
+    //   }
   }
 };
 </script>

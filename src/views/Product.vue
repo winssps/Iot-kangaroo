@@ -1,20 +1,9 @@
 <template>
   <div>
-		<keep-alive>
-			<router-view></router-view>
-		</keep-alive>
+		<!-- <keep-alive> -->
+			<transition name="fade">
+						<router-view></router-view>
+			</transition>
+		<!-- </keep-alive> -->
   </div>
 </template>
-<script>
-
-export default {
-  data() {
-    
-	},
-	mounted() {
-	}
-};
-</script>
-<style lang="scss" scoped>
-
-</style>

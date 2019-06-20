@@ -154,7 +154,7 @@ export default {
         //   add_time: "2019/05/27 20:48:30"
         // }
       ]
-    };
+    }
   },
   computed: {
 		productTitleStateValidation() {
@@ -233,8 +233,9 @@ export default {
 		checkHandle(item, index, target) {
 			console.log(item, index, target)
 			this.$router.push({
-				name: "productInfo",
-				params: item
+				path: `product/detail/${item.productkey}`,
+				// name: "productDetail",
+				// params: item
 			})
 		}
   },
