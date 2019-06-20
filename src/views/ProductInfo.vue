@@ -83,8 +83,7 @@
               </table>
             </b-tab>
             <b-tab title="Topic类列表">
-              <b-table hover :items="topic_items" :fields="topic_fields">
-              </b-table>
+              <b-table hover :items="topic_items" :fields="topic_fields"></b-table>
             </b-tab>
             <b-tab title="功能定义">
               <b-container fluid>
@@ -117,10 +116,9 @@
       cancel-title="取消"
       ok-title="确定"
       ok-variant="info"
-      @show="FunctionShow"
+      @show="functionShow"
       @ok="newFunctionHandleOk"
     >
-
       <b-container fluid>
         <b-row>
           <b-col>
@@ -157,10 +155,7 @@
                   required
                 />
               </b-form-group>
-              <b-form-group
-                label-for="function-data-type-select"
-                invalid-feedback="请选择数据类型"
-              >
+              <b-form-group label-for="function-data-type-select" invalid-feedback="请选择数据类型">
                 <div slot="label">
                   <small style="color:red;">*</small>
                   数据类型
@@ -196,10 +191,7 @@
                   />
                 </b-input-group>
               </b-form-group>
-              <b-form-group
-                label-for="function-data-unit-select"
-                invalid-feedback="请选择数据类型"
-              >
+              <b-form-group label-for="function-data-unit-select" invalid-feedback="请选择数据类型">
                 <div slot="label">
                   <small style="color:red;">*</small>
                   单位：
@@ -299,51 +291,59 @@ export default {
         }
       ],
       function_items: [
-        // {
-        //   function_type: "属性",
-        //   title: "温度",
-        //   identifier: "CurrentTemperature",
-        //   data_type: "浮点型",
-        //   range: "0~500"
-        // }
+        {
+          function_data_type: "int32",
+          function_data_unit: "c",
+          function_identification: "Temp",
+          function_label: "",
+          function_start_value: 0,
+          function_end_value: 100,
+          function_range: "-40 ~ 100",
+          function_title: "室内温度",
+          function_type: "属性"
+        }
       ],
       function_data_type_items: [
-        { value: "int32", text: "Int32整型" },
-        { value: "float", text: "Float浮点型" },
+        { value: "int32", text: "Int32 (整型)" },
+        { value: "float", text: "Float (浮点型)" },
         { value: "text", text: "text (字符串)" },
-        { value: "enum", text: "enum (枚举型)" },
+        { value: "enum", text: "enum (枚举型)" }
       ],
       function_data_unit_items: [
-        { value: '', text: '无 /'},
-        { value: 'kv', text: '千伏 / kV'},
-        { value: 'rh', text: '相对湿度 / %RH'},
-        { value: 'degree', text: '华氏度 / ℉'},
-        { value: 'c', text: '摄氏度 / °C'},
-        { value: 't', text: '吨 / t'},
-        { value: 'mg', text: '毫克 / mg'},
-        { value: 'g', text: '克 / g'},
-        { value: 'kg', text: '千克 / kg'},
-        { value: 'mm', text: '毫米 / mm'},
-        { value: 'cm', text: '厘米 / cm'}, 
-        { value: 'm', text: '米 / m'}, 
-        { value: 'km', text: '千米 / km'}, 
+        { value: "", text: "无 /" },
+        { value: "kv", text: "千伏 / kV" },
+        { value: "rh", text: "相对湿度 / %RH" },
+        { value: "degree", text: "华氏度 / ℉" },
+        { value: "c", text: "摄氏度 / °C" },
+        { value: "t", text: "吨 / t" },
+        { value: "mg", text: "毫克 / mg" },
+        { value: "g", text: "克 / g" },
+        { value: "kg", text: "千克 / kg" },
+        { value: "mm", text: "毫米 / mm" },
+        { value: "cm", text: "厘米 / cm" },
+        { value: "m", text: "米 / m" },
+        { value: "km", text: "千米 / km" }
       ],
       tabIndex: 0,
-      functionTitle: '',
-      functionIdentification: '',
-      functionDataType: 'int32',
-      functionStartValue: '0',
-      functionEndValue: '100',
-      functionDataUnit: '',
-      functionLabel: '',
+      functionTitle: "",
+      functionIdentification: "",
+      functionDataType: "int32",
+      functionStartValue: "0",
+      functionEndValue: "100",
+      functionDataUnit: "",
+      functionLabel: ""
     };
   },
-  computed:{
+  computed: {
     functionTitleStateValidation() {
-      return this.functionTitle.length >= 4 && this.functionTitle.length < 30
+      return this.functionTitle.length >= 4 && this.functionTitle.length < 30;
     },
     functionIdentificationStateValidation() {
-      return /[a-zA-z0-9]$/.test(this.functionIdentification) && this.functionIdentification.length >= 4 && this.functionIdentification.length < 30;
+      return (
+        /[a-zA-z0-9]$/.test(this.functionIdentification) &&
+        this.functionIdentification.length >= 4 &&
+        this.functionIdentification.length < 30
+      );
     },
     functionStartValueStateValidation() {
       return true;
@@ -353,46 +353,61 @@ export default {
     }
   },
   methods: {
-    FunctionShow() {},
+    functionShow() {},
     newFunctionHandleOk(bvModalEvt) {
-      bvModalEvt.preventDefault()
-			this.handleSubmit()
+      bvModalEvt.preventDefault();
+      this.handleSubmit();
     },
     addFunctionHandle() {},
     handleSubmit() {
       // Exit when the form isn't valid
-			if (!this.functionTitleStateValidation || !this.functionIdentificationStateValidation || !this.functionStartValueStateValidation) {
-				return
+      if (
+        !this.functionTitleStateValidation ||
+        !this.functionIdentificationStateValidation ||
+        !this.functionStartValueStateValidation
+      ) {
+        return;
       }
 
       console.log({
-        function_type: '属性',
-				function_title: this.functionTitle,
-				function_identification: this.functionIdentification,
+        productkey: this.product_item.productkey,
+        function_type: "属性",
+        function_title: this.functionTitle,
+        function_identification: this.functionIdentification,
         function_data_type: this.functionDataType,
-        function_range: `${this.functionStartValue} ~ ${this.functionEndValue}`,
-        function_data_unit: this.functionDataUnit,
-        function_label: this.functionLabel
-      })
-      
-      this.function_items.push({
-        function_type: '属性',
-				function_title: this.functionTitle,
-				function_identification: this.functionIdentification,
-        function_data_type: this.functionDataType,
-        function_start_value: this.functionStartValue,
-        function_end_value: this.functionEndValue,
         function_range: `${this.functionStartValue} ~ ${this.functionEndValue}`,
         function_data_unit: this.functionDataUnit,
         function_label: this.functionLabel
       });
 
+      axios
+        .post(`${ConfigUrl}/function`, {
+          function_type: "属性",
+          function_title: this.functionTitle,
+          function_identification: this.functionIdentification,
+          function_data_type: this.functionDataType,
+          function_start_value: this.functionStartValue,
+          function_end_value: this.functionEndValue,
+          function_range: `${this.functionStartValue} ~ ${
+            this.functionEndValue
+          }`,
+          function_data_unit: this.functionDataUnit,
+          function_label: this.functionLabel
+        })
+        .then(res => {
+          console.log(res);
+          this.function_items = res.data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
       this.$nextTick(() => {
-				this.$refs.new_function_modal.hide()
-			})
+        this.$refs.new_function_modal.hide();
+      });
     },
     checkHandle(item, index, target) {
-      console.log(item, index, target)
+      console.log(item, index, target);
     }
   },
   watch: {
@@ -406,8 +421,16 @@ export default {
             console.log(res);
             this.topic_items = res.data;
           });
+        axios
+          .get(`${ConfigUrl}/function`)
+          .then(res => {
+            this.function_items = res.data;
+          })
+          .catch(err => {
+            console.error(err);
+          });
+        this.tabIndex = 0;
       }
-      this.tabIndex = 0;
     }
   }
 };
