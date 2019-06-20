@@ -179,17 +179,17 @@ export default {
 			.then( res => {
 				console.log(res)
         this.product_item = res.data.detail[0];
-        this.function_items = res.data.functions;
+        // this.function_items = res.data.functions;
 
-        this.status_items = res.data.functions.map(item => {
-          return {
-              function_title: item.function_title,
-              function_data_type: item.function_data_type,
-              update_time: this.moment(new Date()),
-              new_value: 0,
-              function_range: item.function_range
-            }
-        })
+        // this.status_items = res.data.functions.map(item => {
+        //   return {
+        //       function_title: item.function_title,
+        //       function_data_type: item.function_data_type,
+        //       update_time: this.moment(new Date()),
+        //       new_value: 0,
+        //       function_range: item.function_range
+        //     }
+        // })
 
 
         // this.topic_items = res.data.topics;
@@ -209,6 +209,7 @@ export default {
         console.log(res)
         this.devices_items = res.data.detail[0];
         this.topic_items = res.data.topic;
+        this.status_items = res.data.value[0].deviceStatus;
 			})
 			.catch( err => {
 				console.log(err)
