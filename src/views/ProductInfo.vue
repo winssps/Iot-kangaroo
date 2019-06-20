@@ -291,17 +291,17 @@ export default {
         }
       ],
       function_items: [
-        {
-          function_data_type: "int32",
-          function_data_unit: "c",
-          function_identification: "Temp",
-          function_label: "",
-          function_start_value: 0,
-          function_end_value: 100,
-          function_range: "-40 ~ 100",
-          function_title: "室内温度",
-          function_type: "属性"
-        }
+        // {
+        //   function_data_type: "int32",
+        //   function_data_unit: "c",
+        //   function_identification: "Temp",
+        //   function_label: "",
+        //   function_start_value: 0,
+        //   function_end_value: 100,
+        //   function_range: "-40 ~ 100",
+        //   function_title: "室内温度",
+        //   function_type: "属性"
+        // }
       ],
       function_data_type_items: [
         { value: "int32", text: "Int32 (整型)" },
@@ -382,6 +382,7 @@ export default {
 
       axios
         .post(`${ConfigUrl}/function`, {
+          productkey: this.product_item.productkey,
           function_type: "属性",
           function_title: this.functionTitle,
           function_identification: this.functionIdentification,
@@ -422,7 +423,7 @@ export default {
             this.topic_items = res.data;
           });
         axios
-          .get(`${ConfigUrl}/function`)
+          .get(`${ConfigUrl}/function?key=${this.product_item.productkey}`)
           .then(res => {
             this.function_items = res.data;
           })
