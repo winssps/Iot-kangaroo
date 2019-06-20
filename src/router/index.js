@@ -12,6 +12,7 @@ const ProductInfo = r => require.ensure([], () => r(require('../views/ProductInf
 
 
 const Devices = r => require.ensure([], () => r(require('../views/Devices.vue')), '/devices')
+const DeviceList = r => require.ensure([], () => r(require('../views/DeviceList.vue')), '/devices/')
 const DevicesInfo = r => require.ensure([], () => r(require('../views/DevicesInfo.vue')), '/devices/info')
 
 
@@ -41,15 +42,21 @@ const router = new VueRouter({
                 },
             ]
         },
-        // {
-        //     path: '/product/info',
-        //     name: 'productInfo',
-        //     component: ProductInfo
-        // },
-        { path: '/devices', component: Devices },
         {
-            path: '/devices/info',
-            component: DevicesInfo
+            path: '/devices',
+            component: Devices,
+            children: [
+                {
+                    path: '/',
+                    name: 'DeviceList',
+                    component: DeviceList
+                },
+                {
+                    path: '/deviceDetail/:key/:name',
+                    name: 'deviceDetail',
+                    component: DevicesInfo
+                },
+            ]
         },
     ]
 })
