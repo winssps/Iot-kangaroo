@@ -85,12 +85,14 @@
             <b-tab title="Topic列表">
               <b-table :items="topic_items" :fields="topic_fields"></b-table>
             </b-tab>
-            <b-tab title="运行状态"></b-tab>
+            <b-tab title="运行状态">
+              <b-table :items="status_items" :fields="status_fields"></b-table>
+            </b-tab>
             <b-tab title="事件管理" disabled></b-tab>
-            <b-tab title="服务调用" disabled></b-tab>
+            <!-- <b-tab title="服务调用" disabled></b-tab>
             <b-tab title="设备影子" disabled></b-tab>
             <b-tab title="文件管理" disabled></b-tab>
-            <b-tab title="日志服务" disabled></b-tab>
+            <b-tab title="日志服务" disabled></b-tab> -->
           </b-tabs>
         </b-col>
       </b-row>
@@ -137,6 +139,33 @@ export default {
           label: "操作"
         }
       ],
+      status_items: [],
+      status_fields: [
+        {
+          key: "function_title",
+          label: "属性名称"
+        },
+        {
+          key: "function_data_type",
+          label: "数据类型"
+        },
+        {
+          key: "update_time",
+          label: "更新时间"
+        },
+        {
+          key: 'new_value',
+          label: "最新值"
+        },
+        {
+          key: "function_range",
+          label: "期望值"
+        },
+        {
+          key: "action",
+          label: "操作"
+        }
+      ],
       devices_items: {},
       product_item: {},
       function_items: [],
@@ -151,6 +180,18 @@ export default {
 				console.log(res)
         this.product_item = res.data.detail[0];
         this.function_items = res.data.functions;
+
+        this.status_items = res.data.functions.map(item => {
+          return {
+              function_title: item.function_title,
+              function_data_type: item.function_data_type,
+              update_time: this.moment(new Date()),
+              new_value: 0,
+              function_range: item.function_range
+            }
+        })
+
+
         // this.topic_items = res.data.topics;
 
         // this.topic_items = res.data.topics.map(item => {
