@@ -1,16 +1,18 @@
 import VueRouter from 'vue-router'
 
 // const App = r => require.ensure([], ()=>r(require('../App.vue')), '/')
-const MyDevices = r => require.ensure([], ()=>r(require('../views/MyDevices.vue')), '/mydevices')
+const MyDevices = r => require.ensure([], () => r(require('../views/MyDevices.vue')), '/mydevices')
 
 
-const Product = r => require.ensure([], ()=>r(require('../views/Product.vue')), '/product')
-const ProductInfo = r => require.ensure([], ()=>r(require('../views/ProductInfo.vue')), '/product/info')
+const Product = r => require.ensure([], () => r(require('../views/Product.vue')), '/product')
+const ProductList = r => require.ensure([], () => r(require('../views/ProductList.vue')), '/product/')
+
+const ProductInfo = r => require.ensure([], () => r(require('../views/ProductInfo.vue')), '/product/info')
 
 
 
-const Devices = r => require.ensure([], ()=>r(require('../views/Devices.vue')), '/devices')
-const DevicesInfo = r => require.ensure([], ()=>r(require('../views/DevicesInfo.vue')), '/devices/info')
+const Devices = r => require.ensure([], () => r(require('../views/Devices.vue')), '/devices')
+const DevicesInfo = r => require.ensure([], () => r(require('../views/DevicesInfo.vue')), '/devices/info')
 
 
 // import MyDevices from '../views/MyDevices.vue'
@@ -21,17 +23,29 @@ const router = new VueRouter({
     routes: [
         // {path: '/', component: App},
         // { path: '/home', component: Home},
-        { path: '/mydevices', component: MyDevices},
-        { 
-            path: '/product', 
+        { path: '/mydevices', component: MyDevices },
+        {
+            path: '/product',
             name: 'product',
             component: Product,
+            children: [
+                {
+                    path: '/',
+                    name: 'productlist',
+                    component: ProductList
+                },
+                {
+                    path: 'info',
+                    name: 'productInfo',
+                    component: ProductInfo
+                },
+            ]
         },
-        {
-            path: '/product/info',
-            name: 'productInfo',
-            component: ProductInfo
-        },
+        // {
+        //     path: '/product/info',
+        //     name: 'productInfo',
+        //     component: ProductInfo
+        // },
         { path: '/devices', component: Devices },
         {
             path: '/devices/info',
