@@ -47,7 +47,7 @@
                     <span class="DeviceInfo__DeviceNickname--NvPnK"></span>
                   </td>
                   <th>IP地址</th>
-                  <td>-</td>
+                  <td>{{devices_items.ipaddress}}</td>
                   <th>固件版本</th>
                   <td>
                     <div title class="index__overFlow--2SooZ">-</div>
@@ -55,11 +55,11 @@
                 </tr>
                 <tr>
                   <th>添加时间</th>
-                  <td>{{devices_items.last_time}}</td>
+                  <td>{{devices_items.add_time}}</td>
                   <th>激活时间</th>
-                  <td></td>
+                  <td>{{devices_items.active_time}}</td>
                   <th>最后上线时间</th>
-                  <td></td>
+                  <td>{{devices_items.last_time}}</td>
                 </tr>
                 <tr>
                   <th>当前状态</th>

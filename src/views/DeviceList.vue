@@ -190,7 +190,10 @@ export default {
         device: this.DevicesTitle,
         type: "设备",
         status: "未激活",
-        last_time: this.moment(new Date())
+        ipaddress: '-',
+        add_time: this.moment(new Date()),
+        active_time: '',
+        last_time: ''
       })
       .then(res => {
         this.devices_items = res.data;
