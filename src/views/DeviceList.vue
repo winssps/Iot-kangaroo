@@ -4,7 +4,7 @@
       <b-row>
         <b-col>
           <b-form-group label="设备列表" label-cols-md="4">
-            <b-button>刷新</b-button>
+            <b-button @click="refreshHandle">刷新</b-button>
             <b-button variant="info" v-b-modal="'new_product_device'">添加设备</b-button>
           </b-form-group>
         </b-col>
@@ -214,7 +214,17 @@ export default {
 				// name: "productDetail",
 				// params: item
 			})
-		}
+    },
+    refreshHandle() {
+			axios.get(`${ConfigUrl}/device`)
+			.then( res => {
+				console.log(res)
+				this.devices_items = res.data;
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
   },
   created() {
     axios.get(`${ConfigUrl}/product`)
