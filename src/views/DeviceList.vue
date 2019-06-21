@@ -14,7 +14,7 @@
           <b-table striped hover :items="devices_items" :fields="devices_fields">
             <template slot="action" slot-scope="row">
               <b-button variant="info" @click="checkHandle(row.item, row.index, $event.target)">查看</b-button>
-              <b-button @click="deviceHandleDelete">删除</b-button>
+              <b-button @click="deviceHandleDelete(row.item)">删除</b-button>
             </template>
           </b-table>
         </b-col>
@@ -206,7 +206,18 @@ export default {
         this.$refs.new_product_device.hide();
       });
     },
-    deviceHandleDelete() {},
+    deviceHandleDelete(item) {
+      console.log(item)
+      axios.delete(`${ConfigUrl}/device/${item.device}`)
+      .then( res => {
+        console.log(res);
+        this.refreshHandle();
+      })
+      .catch( err => {
+        console.error(err);
+      })
+      
+    },
     checkHandle(item, index, target) {
 			console.log(item, index, target)
 			this.$router.push({
