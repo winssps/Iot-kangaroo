@@ -35,63 +35,16 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
-    <!-- <b-container fluid>
-      <b-row>
-        <b-col md="6" lg="4">
-          <b-list-group role="tablist" @click="listGroupClick">
-            <b-list-group-item active href="#home" data-toggle="list" role="tab">关闭</b-list-group-item>
-            <b-list-group-item href="#profile" data-toggle="list" role="tab">低速</b-list-group-item>
-            <b-list-group-item href="#messages" data-toggle="list" role="tab">普通</b-list-group-item>
-            <b-list-group-item href="#settings" data-toggle="list" role="tab">高速</b-list-group-item>
-          </b-list-group>
-        </b-col>
-        <b-col md="6" lg="8">
-          <div class="tab-content">
-            <div class="tab-pane fade active" id="home" role="tabpanel">1</div>
-            <div class="tab-pane fade" id="profile" role="tabpanel">2</div>
-            <div class="tab-pane fade" id="messages" role="tabpanel">3</div>
-            <div class="tab-pane fade" id="settings" role="tabpanel">4</div>
-          </div>
-        </b-col>
-      </b-row>
-    </b-container> -->
-    <!-- <p>设备等级：<span>{{mqttRank}}</span></p>
-    <p>设备转速：<span>{{mqttSpeed}}</span></p>
-    <p>设备<span>{{mqttDevices}}</span></p> -->
   </div>
 </template>
 
 <script>
-// var mqtt = require('mqtt');
-// var client  = mqtt.connect('mqtt://localhost:1234', {
-//   clientId: 'webUser'
-// });
-import $ from 'jquery';
-import axios from 'axios'
 export default {
   name: 'app',
   data () {
     return {
-      mqttRank: '',
-      mqttSpeed: '',
-      // mqttDevices: []
     }
   },
-  methods: {
-    listGroupClick(event) {
-      // console.log(event)
-    }
-  },
-  created() {
-   
-  },
-  mounted() {
-    // $('a[data-toggle="list"]').on('shown.bs.tab', (e) => {
-    //   console.log(e.target.innerHTML) // newly activated tab
-    //   client.publish('rank', e.target.innerHTML)
-    //   this.mqttRank = e.target.innerHTML;
-    // })
-  }
 }
 </script>
 
