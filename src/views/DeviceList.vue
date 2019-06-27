@@ -16,6 +16,9 @@
               <b-button variant="info" @click="checkHandle(row.item, row.index, $event.target)">查看</b-button>
               <b-button @click="deviceHandleDelete(row.item)">删除</b-button>
             </template>
+            <template slot="last_time"  slot-scope="row">
+							{{CalculateLastTime(row.item.last_time)}}
+						</template>
           </b-table>
         </b-col>
       </b-row>
@@ -156,7 +159,7 @@ export default {
           "设备名称不能少于4个字符,多于32个字符";
         return false;
       }
-    }
+    },
   },
   methods: {
     newDevicesHandleOk(bvModalEvt) {
@@ -235,7 +238,12 @@ export default {
 			.catch( err => {
 				console.log(err)
 			})
-		},
+    },
+    CalculateLastTime(last_time) {
+      if(!last_time)
+        return '';
+      return moment().format('llll')
+    }
   },
   created() {
     axios.get(`${ConfigUrl}/product`)

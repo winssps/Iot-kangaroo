@@ -23,7 +23,7 @@
                   <th>节点类型</th>
                   <td>{{product_item.node_type}}</td>
                   <th>创建时间</th>
-                  <td>{{product_item.add_time}}</td>
+                  <td>{{moment(product_item.add_time).format('llll')}}</td>
                 </tr>
                 <tr>
                   <th>所属分类</th>

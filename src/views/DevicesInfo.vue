@@ -13,9 +13,7 @@
                     <span class="index__text--2EhsV">{{product_item.product_title}}</span>
                   </td>
                   <th>ProductKey</th>
-                  <td colspan="3">
-                    {{product_item.productkey}}
-                  </td>
+                  <td colspan="3">{{product_item.productkey}}</td>
                 </tr>
                 <tr>
                   <th>节点类型</th>
@@ -28,9 +26,7 @@
                   </td>
                   <th>DeviceSecret</th>
                   <td>
-                    <span>
-                      ********
-                    </span>
+                    <span>********</span>
                   </td>
                 </tr>
                 <tr>
@@ -55,11 +51,11 @@
                 </tr>
                 <tr>
                   <th>添加时间</th>
-                  <td>{{devices_items.add_time}}</td>
+                  <td>{{moment( devices_items.add_time).format('llll')}}</td>
                   <th>激活时间</th>
-                  <td>{{devices_items.active_time}}</td>
+                  <td>{{moment( devices_items.active_time).format('llll')}}</td>
                   <th>最后上线时间</th>
-                  <td>{{devices_items.last_time}}</td>
+                  <td>{{moment( devices_items.last_time).format('llll')}}</td>
                 </tr>
                 <tr>
                   <th>当前状态</th>
@@ -86,13 +82,17 @@
               <b-table :items="topic_items" :fields="topic_fields"></b-table>
             </b-tab>
             <b-tab title="运行状态">
-              <b-table :items="status_items" :fields="status_fields"></b-table>
+              <b-table :items="status_items" :fields="status_fields">
+                <template slot="update_time"  slot-scope="row">
+                  {{moment(row.item.update_time).format('llll')}}
+                </template>
+              </b-table>
             </b-tab>
             <b-tab title="事件管理" disabled></b-tab>
             <!-- <b-tab title="服务调用" disabled></b-tab>
             <b-tab title="设备影子" disabled></b-tab>
             <b-tab title="文件管理" disabled></b-tab>
-            <b-tab title="日志服务" disabled></b-tab> -->
+            <b-tab title="日志服务" disabled></b-tab>-->
           </b-tabs>
         </b-col>
       </b-row>
@@ -100,8 +100,8 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
-import ConfigUrl from '../config'
+import axios from "axios";
+import ConfigUrl from "../config";
 
 export default {
   data() {
@@ -131,7 +131,7 @@ export default {
           label: "描述"
         },
         {
-          key: 'count',
+          key: "count",
           label: "发布消息次数"
         },
         {
@@ -154,7 +154,7 @@ export default {
           label: "更新时间"
         },
         {
-          key: 'new_value',
+          key: "new_value",
           label: "最新值"
         },
         {
@@ -169,15 +169,16 @@ export default {
       devices_items: {},
       product_item: {},
       function_items: [],
-      topic_items: [],
+      topic_items: []
     };
   },
   created() {
     var params = this.$route.params;
-    console.log(params)
-    axios.get(`${ConfigUrl}/product/${params.key}`)
-			.then( res => {
-				console.log(res)
+    console.log(params);
+    axios
+      .get(`${ConfigUrl}/product/${params.key}`)
+      .then(res => {
+        console.log(res);
         this.product_item = res.data.detail[0];
         // this.function_items = res.data.functions;
 
@@ -191,7 +192,6 @@ export default {
         //     }
         // })
 
-
         // this.topic_items = res.data.topics;
 
         // this.topic_items = res.data.topics.map(item => {
@@ -199,21 +199,21 @@ export default {
         //   item.topic = item.topic.replace(/\$\{deviceName\}/g, params.name);
         //   return item;
         // })
-        
-			})
-			.catch( err => {
-				console.log(err)
-			})
-    axios.get(`${ConfigUrl}/device/${params.name}`)
-			.then( res => {
-        console.log(res)
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    axios
+      .get(`${ConfigUrl}/device/${params.name}`)
+      .then(res => {
+        console.log(res);
         this.devices_items = res.data.detail[0];
         this.topic_items = res.data.topic;
         this.status_items = res.data.value[0].deviceStatus;
-			})
-			.catch( err => {
-				console.log(err)
-			})
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
