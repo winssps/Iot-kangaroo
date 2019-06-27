@@ -381,7 +381,7 @@ export default {
       });
 
       axios
-        .post(`${ConfigUrl}/function`, {
+        .post(`${ConfigUrl}/product/function`, {
           productkey: this.product_item.productkey,
           function_type: "属性",
           function_title: this.functionTitle,

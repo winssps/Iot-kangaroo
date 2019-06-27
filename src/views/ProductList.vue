@@ -16,6 +16,9 @@
 							<b-button variant="info" @click="checkHandle(row.item, row.index, $event.target)">查看</b-button>
 							<b-button @click="deviceHandleDelete(row.item)">删除</b-button>
 						</template>
+						<template slot="add_time"  slot-scope="row">
+							{{moment(row.item.add_time).format('llll')}}
+						</template>
 					</b-table>
 				</b-col>
 			</b-row>

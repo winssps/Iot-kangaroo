@@ -13,6 +13,7 @@ import router from './router';
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 
+moment.lang('zh-cn');
 Vue.prototype.moment = moment;
 
 new Vue({

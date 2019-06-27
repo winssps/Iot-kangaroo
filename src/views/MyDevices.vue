@@ -44,31 +44,6 @@ export default {
             mqttDevices: []
         }
     },
-    created() {
-        // this.moment.locale("zh-cn");
-        // axios
-        // .get('http://localhost:3000/')
-        // .then(response => {
-        //     console.log(response) 
-        //     this.mqttDevices = response.data;
-        // })
-        // client.on('connect', () => {
-        //     // 是否连接服务器，然后订阅在线的客户端
-        //     client.subscribe('clients/online')
-        // });
-        // client.on('message', (topic, message) => {
-
-        // console.log(message.toString())
-
-        //     let messObj  = JSON.parse(message.toString())
-        //     // 订阅的频道收到信息
-        //     let index = this.mqttDevices.findIndex((item) => item.id == messObj.id)
-        //     console.log(index)
-        //     if(index == -1) {
-        //     this.mqttDevices = JSON.parse(message.toString());
-        //     }
-        // })
-    },
 }
 </script>
 <style lang="sass" scoped>
