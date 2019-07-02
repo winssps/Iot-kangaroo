@@ -31,6 +31,8 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import ConfigUrl from '../config'
 export default {
   data() {
     return {
@@ -43,6 +45,16 @@ export default {
     onSubmit(evt) {
       evt.preventDefault()
       console.log(this.username, this.password)
+      axios.post(`${ConfigUrl}/user/login`, {
+        username: this.username,
+        password: this.password
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.error(err);
+      })
     }
   }
 };
