@@ -2,12 +2,13 @@
     <div>
       <b-container fluid>
 			<b-row>
-				<b-col>
-					<b-form-group label="产品列表" label-cols-md="4">
-						<b-button @click="refreshHandle">刷新</b-button>
-						<b-button variant="info" v-b-modal="'new_product_modal'">添加产品</b-button>
-					</b-form-group>
-				</b-col>
+				<b-col style="display:flex;justify-content: space-between;margin: 15px 0;">
+            <h2>设备列表</h2>
+            <div>
+              <b-button @click="refreshHandle">刷新</b-button>
+							<b-button variant="info" v-b-modal="'new_product_modal'">添加产品</b-button>
+            </div>
+        </b-col>
 			</b-row>
 			<b-row>
 				<b-col>
@@ -23,8 +24,6 @@
 				</b-col>
 			</b-row>
 		</b-container>
-    
-    
     <b-modal 
 			id="new_product_modal" 
 			ref="new_product_modal"

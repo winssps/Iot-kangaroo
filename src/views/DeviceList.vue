@@ -2,11 +2,14 @@
   <div>
     <b-container fluid>
       <b-row>
-        <b-col>
-          <b-form-group label="设备列表" label-cols-md="4">
-            <b-button @click="refreshHandle">刷新</b-button>
-            <b-button variant="info" v-b-modal="'new_product_device'">添加设备</b-button>
-          </b-form-group>
+        <b-col style="display:flex;justify-content: space-between;margin: 15px 0;">
+          <!-- <b-form-group label="设备列表" label-cols-md="4"> -->
+            <!-- </b-form-group> -->
+            <h2>设备列表</h2>
+            <div>
+              <b-button @click="refreshHandle">刷新</b-button>
+              <b-button variant="info" v-b-modal="'new_product_device'">添加设备</b-button>
+            </div>
         </b-col>
       </b-row>
       <b-row>
@@ -49,7 +52,7 @@
                 <b-form-select
                   id="product-select"
                   ref="product_select"
-                  v-model="product_select"
+                  v-model="product_select_key"
                   :state="productStateValidation"
                   :options="product_select_items"
                 ></b-form-select>
@@ -134,7 +137,7 @@ export default {
         // }
       ],
       product_select_items: [{ text: "测试", value: "test" }],
-      product_select: null,
+      product_select_key: null,
       DevicesTitle: "",
       DevicesTitle_invalid_feedback: "备注名称不能为空",
       DevicesLabel: ""
@@ -142,7 +145,7 @@ export default {
   },
   computed: {
     productStateValidation() {
-      return this.product_select != null;
+      return this.product_select_key != null;
     },
     DevicesTitleStateValidation() {
       if (this.DevicesTitle.length >= 4 && this.DevicesTitle.length < 32) {
@@ -167,7 +170,7 @@ export default {
       this.handleSubmit();
     },
     DevicesShow() {
-      (this.product_select = null),
+      (this.product_select_key = null),
         (this.DevicesTitle = ""),
         (this.DevicesTitle_invalid_feedback = "备注名称不能为空"),
         (this.DevicesLabel = "");
@@ -178,18 +181,10 @@ export default {
         return;
       }
 
-      console.log(this.$refs.product_select)
-
-      // this.devices_items.push({
-      //   productkey: this.product_select,
-      //   device: this.DevicesTitle,
-      //   type: "设备",
-      //   status: "未激活",
-      //   last_time: this.moment(new Date()).format("llll")
-      // });
+      console.log(this.product_select_key)
 
       axios.post(`${ConfigUrl}/device`, {
-        productkey: this.product_select,
+        productkey: this.product_select_key,
         device: this.DevicesTitle,
         type: "设备",
         status: "未激活",

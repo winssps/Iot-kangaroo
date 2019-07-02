@@ -70,10 +70,7 @@
                     </span>
                   </th>
                   <td colspan="3">
-                    <button
-                      type="button"
-                      class="next-btn next-btn-text next-btn-normal next-btn-medium"
-                    >测试</button>
+                    <b-button>测试</b-button>
                   </td>
                 </tr>
               </table>
@@ -175,34 +172,17 @@ export default {
   created() {
     var params = this.$route.params;
     console.log(params);
+    // 获取产品列表
     axios
       .get(`${ConfigUrl}/product/${params.key}`)
       .then(res => {
         console.log(res);
         this.product_item = res.data.detail[0];
-        // this.function_items = res.data.functions;
-
-        // this.status_items = res.data.functions.map(item => {
-        //   return {
-        //       function_title: item.function_title,
-        //       function_data_type: item.function_data_type,
-        //       update_time: this.moment(new Date()),
-        //       new_value: 0,
-        //       function_range: item.function_range
-        //     }
-        // })
-
-        // this.topic_items = res.data.topics;
-
-        // this.topic_items = res.data.topics.map(item => {
-        //   console.log(item.topic.replace(/\$\{deviceName\}/g, params.name));
-        //   item.topic = item.topic.replace(/\$\{deviceName\}/g, params.name);
-        //   return item;
-        // })
       })
       .catch(err => {
         console.log(err);
       });
+    // 获取设备的详情、topic、value（function）
     axios
       .get(`${ConfigUrl}/device/${params.name}`)
       .then(res => {
