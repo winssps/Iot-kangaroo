@@ -1,9 +1,9 @@
 <template>
   <div>
-		<keep-alive>
+		<!-- <keep-alive> -->
 			<!-- <transition name="fade"> -->
 						<router-view></router-view>
 			<!-- </transition> -->
-		</keep-alive>
+		<!-- </keep-alive> -->
   </div>
 </template>

@@ -13,8 +13,8 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col>
-          <b-table striped hover :items="devices_items" :fields="devices_fields">
+        <b-col md="12">
+          <b-table stacked="sm" striped hover :items="devices_items" :fields="devices_fields">
             <template slot="action" slot-scope="row">
               <b-button variant="info" @click="checkHandle(row.item, row.index, $event.target)">查看</b-button>
               <b-button @click="deviceHandleDelete(row.item)">删除</b-button>

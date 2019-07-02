@@ -76,10 +76,10 @@
               </table>
             </b-tab>
             <b-tab title="Topic列表">
-              <b-table :items="topic_items" :fields="topic_fields"></b-table>
+              <b-table stacked="sm" :items="topic_items" :fields="topic_fields"></b-table>
             </b-tab>
             <b-tab title="运行状态">
-              <b-table :items="status_items" :fields="status_fields">
+              <b-table stacked="sm" :items="status_items" :fields="status_fields">
                 <template slot="update_time"  slot-scope="row">
                   {{moment(row.item.update_time).format('llll')}}
                 </template>

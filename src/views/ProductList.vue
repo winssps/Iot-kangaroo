@@ -3,7 +3,7 @@
       <b-container fluid>
 			<b-row>
 				<b-col style="display:flex;justify-content: space-between;margin: 15px 0;">
-            <h2>设备列表</h2>
+            <h2>产品列表</h2>
             <div>
               <b-button @click="refreshHandle">刷新</b-button>
 							<b-button variant="info" v-b-modal="'new_product_modal'">添加产品</b-button>
@@ -11,8 +11,8 @@
         </b-col>
 			</b-row>
 			<b-row>
-				<b-col>
-					<b-table striped hover :items="product_table_items" :fields="product_table_fields">
+				<b-col md="12">
+					<b-table stacked="sm" striped hover :items="product_table_items" :fields="product_table_fields">
 						<template slot="action" slot-scope="row">
 							<b-button variant="info" @click="checkHandle(row.item, row.index, $event.target)">查看</b-button>
 							<b-button @click="deviceHandleDelete(row.item)">删除</b-button>

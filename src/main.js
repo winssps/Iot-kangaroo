@@ -4,6 +4,7 @@ import App from './App.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import "bootstrap/dist/js/bootstrap.min"
+
 // import "font-awesome/css/font-awesome.min.css"
 import moment from 'moment';
 import VueRouter from 'vue-router'
@@ -21,5 +22,3 @@ new Vue({
   el: '#app',
   render: h => h(App)
 })
-
-
