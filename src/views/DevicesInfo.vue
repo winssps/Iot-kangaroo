@@ -98,8 +98,7 @@
 </template>
 <script>
 import axios from "axios";
-import ConfigUrl from "../config";
-
+import { get, post, axiosdelete } from '../request'
 export default {
   data() {
     return {
@@ -173,23 +172,21 @@ export default {
     var params = this.$route.params;
     console.log(params);
     // 获取产品列表
-    axios
-      .get(`${ConfigUrl}/product/${params.key}`)
-      .then(res => {
-        console.log(res);
-        this.product_item = res.data.detail[0];
+    get(`/product/${params.key}`)
+      .then(data => {
+        console.log(data);
+        this.product_item = data.detail[0];
       })
       .catch(err => {
         console.log(err);
       });
     // 获取设备的详情、topic、value（function）
-    axios
-      .get(`${ConfigUrl}/device/${params.name}`)
-      .then(res => {
-        console.log(res);
-        this.devices_items = res.data.detail[0];
-        this.topic_items = res.data.topic;
-        this.status_items = res.data.value[0].deviceStatus;
+    get(`/device/${params.name}`)
+      .then(data => {
+        console.log(data);
+        this.devices_items = data.detail[0];
+        this.topic_items = data.topic;
+        this.status_items = data.value[0].deviceStatus;
       })
       .catch(err => {
         console.log(err);

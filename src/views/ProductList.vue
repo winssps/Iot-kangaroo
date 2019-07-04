@@ -99,7 +99,6 @@
 <script>
 import randomString from 'random-string';
 import axios from 'axios'
-import ConfigUrl from '../config'
 import { get, post, axiosdelete } from '../request'
 export default {
   data() {

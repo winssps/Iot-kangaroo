@@ -228,7 +228,7 @@
 </template>
 <script>
 import axios from "axios";
-import ConfigUrl from "../config";
+import { get, post, axiosdelete } from '../request'
 export default {
   data() {
     return {
@@ -290,19 +290,7 @@ export default {
           label: "操作"
         }
       ],
-      function_items: [
-        // {
-        //   function_data_type: "int32",
-        //   function_data_unit: "c",
-        //   function_identification: "Temp",
-        //   function_label: "",
-        //   function_start_value: 0,
-        //   function_end_value: 100,
-        //   function_range: "-40 ~ 100",
-        //   function_title: "室内温度",
-        //   function_type: "属性"
-        // }
-      ],
+      function_items: [],
       function_data_type_items: [
         { value: "int32", text: "Int32 (整型)" },
         { value: "float", text: "Float (浮点型)" },
@@ -369,19 +357,7 @@ export default {
         return;
       }
 
-      console.log({
-        productkey: this.product_item.productkey,
-        function_type: "属性",
-        function_title: this.functionTitle,
-        function_identification: this.functionIdentification,
-        function_data_type: this.functionDataType,
-        function_range: `${this.functionStartValue} ~ ${this.functionEndValue}`,
-        function_data_unit: this.functionDataUnit,
-        function_label: this.functionLabel
-      });
-
-      axios
-        .post(`${ConfigUrl}/product/function`, {
+      post(`/product/function`, {
           productkey: this.product_item.productkey,
           function_type: "属性",
           function_title: this.functionTitle,
@@ -395,9 +371,9 @@ export default {
           function_data_unit: this.functionDataUnit,
           function_label: this.functionLabel
         })
-        .then(res => {
-          console.log(res);
-          this.function_items = res.data;
+        .then(data => {
+          console.log(data);
+          this.function_items = data;
         })
         .catch(err => {
           console.error(err);
@@ -417,36 +393,17 @@ export default {
 
     let productkey = this.$route.params.key;
     if(productkey != undefined) {
-      axios.get(`${ConfigUrl}/product/${productkey}`)
-			.then( res => {
-				console.log(res)
-        this.product_item = res.data.detail[0];
-        this.function_items = res.data.functions;
-        this.topic_items = res.data.topics;
+      get(`/product/${productkey}`)
+			.then( data => {
+				console.log(data)
+        this.product_item = data.detail[0];
+        this.function_items = data.functions;
+        this.topic_items = data.topics;
 			})
 			.catch( err => {
 				console.log(err)
 			})
     }
-
-    // this.product_item = this.$route.params;
-    // if (this.product_item.productkey != undefined) {
-    //     axios
-    //       .get(`${ConfigUrl}/topic?key=${this.product_item.productkey}`)
-    //       .then(res => {
-    //         console.log(res);
-    //         this.topic_items = res.data;
-    //       });
-    //     axios
-    //       .get(`${ConfigUrl}/function?key=${this.product_item.productkey}`)
-    //       .then(res => {
-    //         this.function_items = res.data;
-    //       })
-    //       .catch(err => {
-    //         console.error(err);
-    //       });
-    //     this.tabIndex = 0;
-    //   }
   }
 };
 </script>

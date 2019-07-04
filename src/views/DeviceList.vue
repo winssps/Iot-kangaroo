@@ -90,7 +90,7 @@
 </template>
 <script>
 import axios from 'axios'
-import ConfigUrl from '../config'
+import { get, post, axiosdelete } from '../request'
 export default {
   data() {
     return {
@@ -183,7 +183,7 @@ export default {
 
       console.log(this.product_select_key)
 
-      axios.post(`${ConfigUrl}/device`, {
+      post(`/device`, {
         productkey: this.product_select_key,
         device: this.DevicesTitle,
         type: "设备",
@@ -193,8 +193,8 @@ export default {
         active_time: '',
         last_time: ''
       })
-      .then(res => {
-        this.devices_items = res.data;
+      .then(data => {
+        this.devices_items = data;
       })
       .catch(err => {
         console.error(err);
@@ -206,7 +206,7 @@ export default {
     },
     deviceHandleDelete(item) {
       console.log(item)
-      axios.delete(`${ConfigUrl}/device/${item.device}`)
+      axiosdelete(`/device/${item.device}`)
       .then( res => {
         console.log(res);
         this.refreshHandle();
@@ -220,15 +220,13 @@ export default {
 			console.log(item, index, target)
 			this.$router.push({
 				path: `devices/detail/${item.productkey}/${item.device}`,
-				// name: "productDetail",
-				// params: item
 			})
     },
     refreshHandle() {
-			axios.get(`${ConfigUrl}/device`)
-			.then( res => {
-				console.log(res)
-				this.devices_items = res.data;
+			get(`/device`)
+			.then( data => {
+				console.log(data)
+				this.devices_items = data;
 			})
 			.catch( err => {
 				console.log(err)
@@ -244,27 +242,19 @@ export default {
 
     console.log(JSON.parse(localStorage.getItem('user')).token)
 
-    axios.get(`${ConfigUrl}/product`, {
-      headers: {
-        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
-      }
-    })
-			.then( res => {
-				console.log(res)
-        this.product_select_items = res.data.map(item => ({text: item.product_title, value: item.productkey}))
+    get(`/product`)
+			.then( data => {
+				console.log(data)
+        this.product_select_items = data.map(item => ({text: item.product_title, value: item.productkey}))
 			})
 			.catch( err => {
 				console.log(err)
       })
       
-      axios.get(`${ConfigUrl}/device`, {
-        headers: {
-          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
-        }
-      })
-			.then( res => {
-        console.log(res)
-        this.devices_items = res.data;
+      get(`/device`)
+			.then( data => {
+        console.log(data)
+        this.devices_items = data;
 			})
 			.catch( err => {
 				console.log(err)

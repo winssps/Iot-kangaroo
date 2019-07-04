@@ -32,7 +32,6 @@
 </template>
 <script>
 import axios from 'axios'
-import ConfigUrl from '../config'
 import { post } from '../request'
 export default {
   data() {
