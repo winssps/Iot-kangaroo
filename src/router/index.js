@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router'
 
-// const App = r => require.ensure([], ()=>r(require('../App.vue')), '/')
+const Nav = r => require.ensure([], ()=>r(require('../views/Nav.vue')), '/')
 const MyDevices = r => require.ensure([], () => r(require('../views/MyDevices.vue')), '/mydevices')
 
 
@@ -24,9 +24,10 @@ const Login = r => require.ensure([], () => r(require('../views/Login.vue')), '/
 const router = new VueRouter({
     mode: 'history',
     routes: [
-        // {path: '/', component: Login},
-        // { path: '/home', component: Home},
-        // { path: '/mydevices', component: MyDevices },
+        {
+            path: '/', 
+            component: Nav
+        },
         {
             path: '/product',
             name: 'product',
@@ -72,16 +73,22 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-    if(to.name === 'login') {  //如果是登录页，则跳过验证
-        next()  //必不可少
-        return  //以下的代码不执行
+    const login = localStorage.getItem('user');
+
+    if(to.name === 'login' && login) {
+        next('/')
+        return;
     }
-    const login = localStorage.getItem('login');
-    console.log("登录没有？", login)
+
+    if(to.name === 'login') {  //如果是登录页，则跳过验证
+        next();  //必不可少
+        return;  //以下的代码不执行
+    }
+
     if (!login) {
         next({name: 'login'})
     } else {
-        next()
+        next();
     }
 });
 

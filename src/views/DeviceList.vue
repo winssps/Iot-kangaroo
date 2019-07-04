@@ -241,7 +241,14 @@ export default {
     }
   },
   created() {
-    axios.get(`${ConfigUrl}/product`)
+
+    console.log(JSON.parse(localStorage.getItem('user')).token)
+
+    axios.get(`${ConfigUrl}/product`, {
+      headers: {
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
+      }
+    })
 			.then( res => {
 				console.log(res)
         this.product_select_items = res.data.map(item => ({text: item.product_title, value: item.productkey}))
@@ -250,7 +257,11 @@ export default {
 				console.log(err)
       })
       
-      axios.get(`${ConfigUrl}/device`)
+      axios.get(`${ConfigUrl}/device`, {
+        headers: {
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
+        }
+      })
 			.then( res => {
         console.log(res)
         this.devices_items = res.data;

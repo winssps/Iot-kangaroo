@@ -33,6 +33,7 @@
 <script>
 import axios from 'axios'
 import ConfigUrl from '../config'
+import { post } from '../request'
 export default {
   data() {
     return {
@@ -45,12 +46,17 @@ export default {
     onSubmit(evt) {
       evt.preventDefault()
       console.log(this.username, this.password)
-      axios.post(`${ConfigUrl}/user/login`, {
+
+      post('/user/login', {
         username: this.username,
         password: this.password
       })
-      .then(res => {
-        console.log(res);
+      .then(data => {
+        console.log(data);
+        if(!localStorage.getItem('user')) {
+          localStorage.setItem('user', JSON.stringify({username: data.username, token: data.token}));
+          this.$router.push({ path: '/'})
+        }
       })
       .catch(err => {
         console.error(err);

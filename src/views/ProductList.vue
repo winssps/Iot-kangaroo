@@ -100,6 +100,7 @@
 import randomString from 'random-string';
 import axios from 'axios'
 import ConfigUrl from '../config'
+import { get, post, axiosdelete } from '../request'
 export default {
   data() {
     return {
@@ -201,15 +202,15 @@ export default {
 			// 	add_time: this.moment(new Date()).format('llll')
 			// })
 
-			axios.post(`${ConfigUrl}/product`,{
+			post('/product',{
 				product_title: this.productTitle,
 				productkey: productkey,
 				node_type: this.nodeType,
 				add_time: this.moment(new Date())
 			})
-			.then( res => {
-				console.log(res)
-				this.product_table_items = res.data;
+			.then( data => {
+				console.log(data)
+				this.product_table_items = data;
 			})
 			.catch( err => {
 				console.log(err)
@@ -223,10 +224,10 @@ export default {
 			})
 		},
 		refreshHandle() {
-			axios.get(`${ConfigUrl}/product`)
-			.then( res => {
-				console.log(res)
-				this.product_table_items = res.data;
+			get('/product')
+			.then( data => {
+				console.log(data)
+				this.product_table_items = data;
 			})
 			.catch( err => {
 				console.log(err)
@@ -236,13 +237,11 @@ export default {
 			console.log(item, index, target)
 			this.$router.push({
 				path: `product/detail/${item.productkey}`,
-				// name: "productDetail",
-				// params: item
 			})
 		},
 		deviceHandleDelete(item) {
       console.log(item)
-      axios.delete(`${ConfigUrl}/product/${item.productkey}`)
+      axiosdelete(`/product/${item.productkey}`)
       .then( res => {
         console.log(res);
         this.refreshHandle();
@@ -253,14 +252,16 @@ export default {
     },
   },
   created(){
-		axios.get(`${ConfigUrl}/product`)
-			.then( res => {
-				console.log(res)
-				this.product_table_items = res.data;
-			})
-			.catch( err => {
-				console.log(err)
-			})
+
+		console.log(JSON.parse(localStorage.getItem('user')).token)
+
+
+		get('/product')
+		.then(data => {
+			console.log(data)
+			this.product_table_items = data;
+		})
+		.catch(err => console.log);
 	},
 };
 </script>
