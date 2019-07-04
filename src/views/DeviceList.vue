@@ -237,7 +237,7 @@ export default {
     CalculateLastTime(last_time) {
       if(!last_time)
         return '';
-      return moment().format('llll')
+      return this.moment().format('llll')
     }
   },
   created() {
